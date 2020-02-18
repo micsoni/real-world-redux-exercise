@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { developersFetched } from "../store/developersActions";
 
 class DevelopersList extends React.Component {
   componentDidMount() {
@@ -8,24 +9,22 @@ class DevelopersList extends React.Component {
     )
       .then(res => res.json())
       .then(data => {
-        this.props.dispatch({
-          type: "FETCH_DEVELOPERS",
-          payload: data.rows // array of developers
-        });
+        this.props.dispatch(developersFetched(data.rows));
       });
   }
 
   render() {
-    if (!this.props.developers) {
+    if (!this.props.developersArray) {
       return <div>Loading</div>;
     }
     return (
       <div>
         <p>
-          We have nourished {this.props.developers.length} developers by now!
+          We have nourished {this.props.developersArray.length} developers by
+          now!
         </p>
         <ul>
-          {this.props.developers.map(dev => {
+          {this.props.developersArray.map(dev => {
             return (
               <li key={dev.id}>
                 {dev.name} ({dev.email})
@@ -40,7 +39,7 @@ class DevelopersList extends React.Component {
 
 function mapStateToProps(reduxState) {
   return {
-    developers: reduxState.developers
+    developersArray: reduxState.developers
   };
 }
 
